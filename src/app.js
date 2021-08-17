@@ -55,6 +55,20 @@ const mySuperGalleryModalWindow = document.querySelector('.js-lightbox');
 
 const LightBoxContainerImage = document.querySelector('.lightbox__image');
 
+const mySuperGalleryModalWindowCloseButton = document.querySelector('.lightbox__button');
+
+const mySuperGalleryModalWindowOverlay = document.querySelector('.lightbox__overlay');
+
+mySuperGalleryModalWindowOverlay.addEventListener('click', removeClassOperation);
+
+mySuperGalleryModalWindowCloseButton.addEventListener('click', removeClassOperation);
+
+window.addEventListener('keydown', onEscapeKeyPress);
+
+window.addEventListener('keydown', onArrowRightKeyPress);
+
+window.addEventListener('keydown', onArrowLeftKeyPress);
+
 markupContainer.insertAdjacentHTML('beforeend', readyMarkup);
 
 markupContainer.addEventListener('click', onMySuperGalaryItemClick);
@@ -91,4 +105,33 @@ function onMySuperGalaryItemClick(event) {
 
   LightBoxContainerImage.src = event.target.dataset.source;
   LightBoxContainerImage.alt = event.target.alt;
+}
+
+function removeClassOperation(event) {
+  mySuperGalleryModalWindow.classList.remove('is-open');
+  LightBoxContainerImage.src = 0;
+  LightBoxContainerImage.alt = 0;
+}
+
+function onEscapeKeyPress(event) {
+  if (event.code === 'Escape') {
+    removeClassOperation();
+  }
+}
+
+// // При попытке реализовать функционал из дополнительного задания все получилось
+//  кроме листания стрелками, листает только один раз вправо и один раз влево.
+
+function onArrowRightKeyPress(event) {
+  if (event.code === 'ArrowRight') {
+    LightBoxContainerImage.src =
+      event.target.parentNode.nextSibling.childNodes[1].firstChild.nextElementSibling.dataset.source;
+  }
+}
+
+function onArrowLeftKeyPress(event) {
+  if (event.code === 'ArrowLeft') {
+    LightBoxContainerImage.src =
+      event.target.parentNode.previousSibling.childNodes[1].firstChild.nextElementSibling.dataset.source;
+  }
 }
