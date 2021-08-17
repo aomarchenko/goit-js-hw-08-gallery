@@ -48,8 +48,16 @@ const galleryItems = [
 ];
 
 const markupContainer = document.querySelector('.js-gallery');
+
 const readyMarkup = createMySuperGallaryMarkup(galleryItems);
+
+const mySuperGalleryModalWindow = document.querySelector('.js-lightbox');
+
+const LightBoxContainerImage = document.querySelector('.lightbox__image');
+
 markupContainer.insertAdjacentHTML('beforeend', readyMarkup);
+
+markupContainer.addEventListener('click', onMySuperGalaryItemClick);
 
 console.log(createMySuperGallaryMarkup(galleryItems));
 function createMySuperGallaryMarkup(galleryItems) {
@@ -59,6 +67,7 @@ function createMySuperGallaryMarkup(galleryItems) {
     <a
       class="gallery__link"
       href="${original}"
+     
     >
       <img
         class="gallery__image"
@@ -70,4 +79,16 @@ function createMySuperGallaryMarkup(galleryItems) {
   </li>`;
     })
     .join('');
+}
+
+function onMySuperGalaryItemClick(event) {
+  event.preventDefault();
+  if (!event.target.classList.contains('gallery__image')) {
+    return;
+  }
+  mySuperGalleryModalWindow.classList.add('is-open');
+  console.log(event.target);
+
+  LightBoxContainerImage.src = event.target.dataset.source;
+  LightBoxContainerImage.alt = event.target.alt;
 }
