@@ -65,15 +65,12 @@ mySuperGalleryModalWindowCloseButton.addEventListener('click', removeClassOperat
 
 window.addEventListener('keydown', onEscapeKeyPress);
 
-window.addEventListener('keydown', onArrowRightKeyPress);
-
 window.addEventListener('keydown', onArrowLeftKeyPress);
 
 markupContainer.insertAdjacentHTML('beforeend', readyMarkup);
 
 markupContainer.addEventListener('click', onMySuperGalaryItemClick);
 
-console.log(createMySuperGallaryMarkup(galleryItems));
 function createMySuperGallaryMarkup(galleryItems) {
   return galleryItems
     .map(({ preview, original, description }) => {
@@ -94,6 +91,21 @@ function createMySuperGallaryMarkup(galleryItems) {
     })
     .join('');
 }
+const allImages = document.querySelector('.gallery');
+
+const myImages = document.querySelectorAll('.gallery__image');
+
+myImages[0].setAttribute('data-picture-name', '1');
+myImages[1].setAttribute('data-picture-name', '2');
+myImages[2].setAttribute('data-picture-name', '3');
+myImages[3].setAttribute('data-picture-name', '4');
+myImages[4].setAttribute('data-picture-name', '5');
+myImages[5].setAttribute('data-picture-name', '6');
+myImages[6].setAttribute('data-picture-name', '7');
+myImages[7].setAttribute('data-picture-name', '8');
+myImages[8].setAttribute('data-picture-name', '9');
+
+allImages.addEventListener('keydown', onArrowRightKeyPress, onArrowLeftKeyPress);
 
 function onMySuperGalaryItemClick(event) {
   event.preventDefault();
@@ -101,7 +113,6 @@ function onMySuperGalaryItemClick(event) {
     return;
   }
   mySuperGalleryModalWindow.classList.add('is-open');
-  console.log(event.target);
 
   LightBoxContainerImage.src = event.target.dataset.source;
   LightBoxContainerImage.alt = event.target.alt;
@@ -109,8 +120,8 @@ function onMySuperGalaryItemClick(event) {
 
 function removeClassOperation(event) {
   mySuperGalleryModalWindow.classList.remove('is-open');
-  LightBoxContainerImage.src = 0;
-  LightBoxContainerImage.alt = 0;
+  LightBoxContainerImage.src = '';
+  LightBoxContainerImage.alt = '';
 }
 
 function onEscapeKeyPress(event) {
@@ -120,18 +131,33 @@ function onEscapeKeyPress(event) {
 }
 
 // // При попытке реализовать функционал из дополнительного задания все получилось
-//  кроме листания стрелками, листает только один раз вправо и один раз влево.
+//  кроме листания стрелками, раньше листало только один раз вправо и один раз влево,
+// теперь листает нормально и вперед и назад если открывать галерею с первой картинки(синий цветок)
+// если с третей, например, то перелистывание буксует - нужно нажимать листание несколько раз(чем дальше картинка
+//  от первой - тем больше раз нужно нажимать на стрелку пока начнет перелистывать)
 
+let number = 0;
 function onArrowRightKeyPress(event) {
+  let nextPicture = Number(event.target.childNodes[0].nextElementSibling.dataset.pictureName);
   if (event.code === 'ArrowRight') {
-    LightBoxContainerImage.src =
-      event.target.parentNode.nextSibling.childNodes[1].firstChild.nextElementSibling.dataset.source;
+    number += 1;
+
+    if (number > 8) {
+      number = 0;
+    }
+    LightBoxContainerImage.src = myImages[nextPicture - 1 + number].dataset.source;
   }
 }
 
 function onArrowLeftKeyPress(event) {
+  let prewPicture = Number(event.target.childNodes[0].nextElementSibling.dataset.pictureName);
+
   if (event.code === 'ArrowLeft') {
-    LightBoxContainerImage.src =
-      event.target.parentNode.previousSibling.childNodes[1].firstChild.nextElementSibling.dataset.source;
+    number -= 1;
+
+    if (number < 0) {
+      number = 8;
+    }
+    LightBoxContainerImage.src = myImages[prewPicture - 1 + number].dataset.source;
   }
 }
